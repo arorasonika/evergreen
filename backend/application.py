@@ -13,7 +13,7 @@ app.debug = True
 def index():
   return render_template(
     'index.html',
-    js_url='//localhost:8080/main.bundle.js'
+    js_url='//127.0.0.1:8080/main.bundle.js'
   )
 
 app.add_url_rule('/graphql', view_func=GraphQLView.as_view(
