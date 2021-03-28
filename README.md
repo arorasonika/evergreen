@@ -31,5 +31,5 @@ Changes to frontend code are auto reloaded.
 
 # View the App
 Homepage: http://localhost:5000
-The explanantion of the table seen on the homepage is in the video. 
+The explanation of the table seen on the homepage is in the video. 
 All fields are sortable by clicking on the header and can be filtered by entering values in the blanks below the headers. Data can be filtered using multiple fields as well. 
