@@ -1,20 +1,93 @@
 import React from 'react';
 import { css } from 'aphrodite';
-import { gql, useQuery } from '@apollo/client';
+import { ApolloProvider, gql, useQuery } from '@apollo/client';
 
 import Text from './lib/Text';
 import customStyleSheet from './lib/customStyleSheet';
 import evergreenIcon from './img/evergreen_icon.png';
 import getImageUri from './utils/getImageUri';
+import ReactTable from 'react-table-6';
+import 'react-table-6/react-table.css';
 
-const GET_USER_QUERY = gql`
-  query GetUser($id: Int!) {
-    user(id: $id) {
-      firstName
-      lastName
-    }
+const allVendors = gql`
+query
+{
+  allVendors
+  {
+    name,
+    description,
+    externalLink,
+    category,
+    status,
+    tier,
+    risk
   }
-`;
+}`;
+
+
+const columns = [
+
+  {
+    Header: 'Name',
+    accessor: 'name',
+    sortable: true,
+    filterable: true,
+    width: 175
+  },
+  {
+    Header: 'Description',
+    accessor: 'description',
+    sortable: true,
+    filterable: true,
+    width: 450
+  },
+  {
+    Header: 'External Link',
+    accessor: 'externalLink',
+    sortable: true,
+    filterable: true,
+    width: 250
+  },
+  {
+    Header: 'Category',
+    accessor: 'category',
+    sortable: true,
+    filterable: true
+  },
+  {
+    Header: 'Status',
+    accessor: 'status',
+    sortable: true,
+    filterable: true
+  },
+  {
+    Header: 'Tier',
+    accessor: 'tier',
+    sortable: true,
+    filterable: true
+  },
+  {
+    Header: 'Risk',
+    accessor: 'risk',
+    sortable: true,
+    filterable: true
+  }
+];
+
+
+function VendorListWithData() {
+  const {loading, error, data} = useQuery(allVendors);
+  if (loading) return <p>Loading...</p>
+  if (error) return <p>Error...</p>
+  console.log(data);
+  return (
+      <ReactTable className="-striped -highlight"
+      data={data["allVendors"]}
+      columns={columns}
+      defaultPageSize={10}
+      />
+  )
+}
 
 const styles = customStyleSheet(({ color, bp }) => ({
   logo: {
@@ -24,35 +97,18 @@ const styles = customStyleSheet(({ color, bp }) => ({
   },
   container: {
     backgroundColor: color.background,
-    height: '100vh',
+    height: 'flex',
     display: 'flex',
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
 }));
 
 function App() {
-  const { data } = useQuery(GET_USER_QUERY, {
-    variables: {
-      id: 1,
-    },
-  });
-
-  const user = data && data.user;
-  const titleText = user
-    ? `Welcome to Evergreen ${user.firstName} ${user.lastName}!`
-    : 'Welcome to Evergreen!';
-
   return (
     <div className={css(styles.container)}>
-      <img
-        className={css(styles.logo)}
-        src={getImageUri(evergreenIcon)}
-        alt="logo"
-      />
-      <Text title1>
-        {titleText}
-      </Text>
+      <VendorListWithData/>
     </div>
   );
 }
